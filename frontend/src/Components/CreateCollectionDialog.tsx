@@ -6,16 +6,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Box, MenuItem } from '@mui/material';
-import { RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
+import { Box } from '@mui/material';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { CollectionDataType } from '../types/dataTypes/CollectionDataType';
 import { DialogFormValues } from './CollectionDialog';
-import {
-    CREATE_COLLECTION_DIALOG_TEXT,
-    CREATE_COLLECTION_DIALOG_TITLE,
-} from '../utills/constants';
+
 import AddPosterComponent from './AddPosterComponent';
-import { NAME_VALIDATION_CONFIG } from '../configs/validationConfig';
 import { useTranslation } from 'react-i18next';
 import CategoriesMenu from './CategoriesMenu';
 

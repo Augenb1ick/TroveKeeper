@@ -11,23 +11,12 @@ import Container from '@mui/material/Container';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AuthFormValues } from '../types/dataTypes/FormValues';
-import {
-    EMAIL_PATTERN,
-    SERVER_ERROR_MESSAGE,
-    SUCCESS_SIGNUP_TEXT,
-    errorMessages,
-} from '../utills/constants';
+import { EMAIL_PATTERN } from '../utills/constants';
 import { FC, useState } from 'react';
 import { reformFormData } from '../utills/formDataReformer';
 import { managingUsersApi } from '../utills/api/usersApi';
 import { useNavigate } from 'react-router-dom';
 import { useSnackBars } from '../context/SnackBarsContext';
-import Snackbar from '../Components/Snackbar';
-import {
-    EMAIL_VALIDATION_CONFIG,
-    NAME_VALIDATION_CONFIG,
-    PASSWORD_VALIDATION_CONFIG,
-} from '../configs/validationConfig';
 import { IconButton } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ChangeLanguageButtons from '../Components/ChangeLanguageButtons';

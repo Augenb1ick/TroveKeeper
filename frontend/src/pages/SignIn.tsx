@@ -11,11 +11,7 @@ import Container from '@mui/material/Container';
 import { FC, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AuthFormValues } from '../types/dataTypes/FormValues';
-import {
-    EMAIL_PATTERN,
-    SERVER_ERROR_MESSAGE,
-    errorMessages,
-} from '../utills/constants';
+import { EMAIL_PATTERN } from '../utills/constants';
 import { reformFormData } from '../utills/formDataReformer';
 import { managingUsersApi } from '../utills/api/usersApi';
 import { useNavigate } from 'react-router-dom';

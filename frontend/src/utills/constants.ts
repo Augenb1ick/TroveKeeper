@@ -20,6 +20,8 @@ export const defaultUserData: UserDataType = {
     role: '',
 };
 
+export const DENIED_ERROR = 'Error:401';
+
 export const SERVER_ERROR_MESSAGE = 'Something went wrong! Please try again.';
 
 export const DELETE_ERROR_MESSAGE =
