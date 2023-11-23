@@ -38,7 +38,7 @@ const MyCollections = () => {
         collectionsApi
             .createCollection(data)
             .then((collection) => {
-                setChangedCollection(collection);
+                setUsersCollections([usersCollections, collection]);
                 handleCloseDialogs();
             })
             .catch(() => {
@@ -97,16 +97,18 @@ const MyCollections = () => {
                 >
                     {!usersCollections.length ? t('empty') : t('addCollection')}
                 </Button>
-                {usersCollections.map((collection) => (
-                    <CollectionCard
-                        key={collection._id}
-                        collectionId={collection._id}
-                        collectionPoster={collection.poster}
-                        collectionName={collection.name}
-                        collectionCategory={collection.category}
-                        numberOfItems={collection.items.length || 0}
-                    />
-                ))}
+                {usersCollections
+                    ? usersCollections.map((collection) => (
+                          <CollectionCard
+                              key={collection._id}
+                              collectionId={collection._id}
+                              collectionPoster={collection.poster}
+                              collectionName={collection.name}
+                              collectionCategory={collection.category}
+                              numberOfItems={collection.items?.length || 0}
+                          />
+                      ))
+                    : ''}
             </Box>
         </>
     );
