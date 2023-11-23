@@ -1,15 +1,10 @@
-import { Chip, SnackbarOrigin } from '@mui/material';
+import { SnackbarOrigin } from '@mui/material';
 import { UserDataType } from '../types/dataTypes/userData';
-import { DialogSelectsFields } from '../types/dataTypes/DialogSelectsFields';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { ItemType } from '../Components/ItemsTable';
 
-export const API_URL = 'http://localhost:4000';
+export const API_URL = 'https://testing-web.site';
 
-export const REQUIRED_ERROR_MESSAGE = 'This field is required';
 export const EMAIL_PATTERN =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-export const EMAIL_PATTERN_ERROR_MESSAGE = 'Please enter a valid email address';
 
 export const TABLE_INITIAL_PAGE = 0;
 export const TABLE_PAGE_SIZE = 5;
@@ -25,17 +20,6 @@ export const defaultUserData: UserDataType = {
     role: '',
 };
 
-export const CONFLICT_ERR = 'Error: 409';
-export const CONFLICT_ERR_MESSAGE =
-    'A user with this email is already registered!';
-
-export const DENIED_ERROR = 'Error: 401';
-export const DENIED_ERROR_MESSAGE = 'Incorrect login or password!';
-
-export const FORBIDEN_ERROR = 'Error: 403';
-export const FORBIDEN_ERROR_MESSAGE =
-    'Your account is temporarily blocked. If you believe this is a mistake, please contact the administrator.';
-
 export const SERVER_ERROR_MESSAGE = 'Something went wrong! Please try again.';
 
 export const DELETE_ERROR_MESSAGE =
@@ -49,12 +33,6 @@ export const UPDATE_USERS_ERROR_MESSAGE =
 
 export const SUCCESS_SIGNUP_TEXT =
     'Registration is completed. Welcome to TroveKeeper!';
-
-export const errorMessages: { [key: string]: string } = {
-    [DENIED_ERROR]: DENIED_ERROR_MESSAGE,
-    [FORBIDEN_ERROR]: FORBIDEN_ERROR_MESSAGE,
-    [CONFLICT_ERR]: CONFLICT_ERR_MESSAGE,
-};
 
 export const SNACK_POSITION: SnackbarOrigin = {
     vertical: 'top',
