@@ -3,6 +3,7 @@ import {
     GridRenderCellParams,
     GridRowId,
     GridRowParams,
+    ruRU,
 } from '@mui/x-data-grid';
 import { FC, useEffect, useState } from 'react';
 import {
@@ -71,9 +72,11 @@ interface ItemsTableProps {
 }
 
 const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
-    const { t } = useTranslation('translation', {
+    const { t, i18n } = useTranslation('translation', {
         keyPrefix: 'collection.dialogs',
     });
+
+    const currentLanguage = i18n.language;
     const initialTableFields = [
         {
             field: 'id',
@@ -879,9 +882,12 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                     onRowSelectionModelChange={handleRowClick}
                     onRowClick={handleItemClick}
                     autoHeight
-                    localeText={{
-                        noRowsLabel: 'No items yet',
-                    }}
+                    localeText={
+                        currentLanguage === 'ru'
+                            ? ruRU.components.MuiDataGrid.defaultProps
+                                  .localeText
+                            : undefined
+                    }
                     rows={items}
                     columns={tableFields}
                     initialState={{

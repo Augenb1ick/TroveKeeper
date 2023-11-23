@@ -14,12 +14,8 @@ const MyCollections = () => {
         keyPrefix: 'myCollections',
     });
 
-    const {
-        usersCollections,
-        setUsersCollections,
-        setChangedCollection,
-        changedCollection,
-    } = useCollections();
+    const { usersCollections, setUsersCollections, setAllCollections } =
+        useCollections();
 
     const { handleErrorSnackOpen } = useSnackBars();
 
@@ -38,13 +34,13 @@ const MyCollections = () => {
         collectionsApi
             .createCollection(data)
             .then((collection) => {
-                setUsersCollections([usersCollections, collection]);
+                setUsersCollections((prev) => [collection, ...prev]);
+                setAllCollections((prev) => [...prev, collection]);
                 handleCloseDialogs();
             })
             .catch(() => {
                 handleErrorSnackOpen(CREATING_COLLECTION_ERROR_MESSAGE);
-            })
-            .finally(() => setChangedCollection(''));
+            });
     };
 
     useEffect(() => {
@@ -58,7 +54,7 @@ const MyCollections = () => {
             })
             // TODO: handle errors with snakbars
             .catch((err) => console.log(err));
-    }, [changedCollection]);
+    }, []);
 
     return (
         <>

@@ -157,6 +157,7 @@ const Collection: FC<CollectionProps> = ({ id }) => {
                             onChange={handleChangeCollectionCategory}
                             defaultValue={collectionFields.category}
                             key={collectionFields.category}
+                            disabled={!isOwner}
                         />
                     </Box>
                     <AddPosterComponent

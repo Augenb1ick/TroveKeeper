@@ -96,8 +96,8 @@
                     "addItemDialog": {
                         "title": "Add item to your collection",
                         "text": "Please fill in the information about the new item in your collection",
-                        "name": "Название",
-                        "tags": "Тэги",
+                        "name": "Name",
+                        "tags": "Tags",
                         "buttonText": "Add"
                     },
                     "addFieldDialog": {
