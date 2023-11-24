@@ -22,13 +22,10 @@ const TagsPage = ({ tag }: { tag: TagDataType }) => {
             margin='20px auto'
             gap='30px'
         >
-            <Box display='flex' gap='10px' alignItems='center'>
-                <Typography component='h2' variant='h3'>
-                    {t('title')}
-                </Typography>
-                <Chip color='primary' label={tag.name} />
-            </Box>
-
+            <Typography component='h2' variant='h4'>
+                {t('title')}
+                <Chip sx={{ ml: '5px' }} color='primary' label={tag.name} />
+            </Typography>
             <Box display='flex' flexDirection='column' gap='20px'>
                 {allTagsItems?.length ? (
                     allTagsItems?.map((item) => (

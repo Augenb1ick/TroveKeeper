@@ -49,7 +49,7 @@ const AllCollections = () => {
                 flexDirection='column'
                 gap='20px'
             >
-                <Typography variant='h3' component='h2'>
+                <Typography variant='h4' component='h2'>
                     {sectionTitle}
                 </Typography>
                 <Box

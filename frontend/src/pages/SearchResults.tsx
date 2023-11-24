@@ -33,8 +33,8 @@ const SearchResults = () => {
             margin='20px auto'
             gap='30px'
         >
-            <Typography component='h2' variant='h3'>
-                {`${t('resultsFor')} ${searchQuery}:`}
+            <Typography component='h2' variant='h4'>
+                {`${t('resultsFor')} ''${searchQuery}'':`}
             </Typography>
             <Box display='flex' flexDirection='column' gap='20px'>
                 {foundItems?.length ? (

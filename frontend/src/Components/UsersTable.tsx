@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { DataGrid, GridColDef, GridRowId } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowId, ruRU } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -29,9 +29,11 @@ const UsersTable: React.FC<UsersTableProps> = ({
     handleDemoteAdmin,
     isLoading,
 }) => {
-    const { t } = useTranslation('translation', {
+    const { t, i18n } = useTranslation('translation', {
         keyPrefix: 'adminPanel',
     });
+    const currentLanguage = i18n.language;
+
     const { users } = useUsers();
 
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -147,6 +149,12 @@ const UsersTable: React.FC<UsersTableProps> = ({
                             },
                         },
                     }}
+                    localeText={
+                        currentLanguage === 'ru'
+                            ? ruRU.components.MuiDataGrid.defaultProps
+                                  .localeText
+                            : undefined
+                    }
                     pageSizeOptions={TABLE_PAGE_SIZE_OPTIONS}
                     checkboxSelection
                 />

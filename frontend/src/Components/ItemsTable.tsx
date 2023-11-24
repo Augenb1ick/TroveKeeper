@@ -35,6 +35,8 @@ import { useUsers } from '../context/UsersContext';
 import { useTranslation } from 'react-i18next';
 import { DialogSelectsFields } from '../types/dataTypes/DialogSelectsFields';
 import { useItems } from '../context/ItemsContext';
+import DownloadIcon from '@mui/icons-material/Download';
+import exportFromJSON from 'export-from-json';
 
 export type ItemType = {
     id: string;
@@ -814,6 +816,22 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
         },
     ];
 
+    const handleDownloadTable = () => {
+        const data = items.map((item, index) => {
+            return {
+                '#': index + 1,
+                name: item.name,
+                tags: item.tags?.join(', '),
+                Year: item.Year,
+                'Duration (min)': item['Duration (min)'],
+            };
+        });
+        const fileName = getCollectionName(collectionId);
+        const withBOM = true;
+        const exportType = exportFromJSON.types.csv;
+        exportFromJSON({ data, fileName, exportType, withBOM });
+    };
+
     return (
         <>
             <CollectionDialog
@@ -860,8 +878,23 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 isDialogTags
                 allTags={allTags}
             />
+            {!isOwner && (
+                <Button
+                    onClick={handleDownloadTable}
+                    variant='outlined'
+                    sx={{ minWidth: 0, maxWidth: 'fit-content', ml: 'auto' }}
+                    disabled={!items.length}
+                >
+                    <DownloadIcon />
+                </Button>
+            )}
             {isOwner && (
-                <Stack direction='row' spacing={1}>
+                <Box
+                    display='flex'
+                    flexDirection='row'
+                    flexWrap='wrap'
+                    gap='8px'
+                >
                     <Button
                         onClick={handleOpenEditItemDialog}
                         sx={buttonTextSx}
@@ -899,6 +932,14 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                         <OpenInNewIcon />
                     </Button>
                     <Button
+                        onClick={handleDownloadTable}
+                        variant='outlined'
+                        sx={{ minWidth: 0 }}
+                        disabled={!items.length}
+                    >
+                        <DownloadIcon />
+                    </Button>
+                    <Button
                         sx={{ minWidth: 0, ml: 'auto !important' }}
                         disabled={buttonIsDisabled}
                         variant='contained'
@@ -907,7 +948,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                     >
                         <DeleteIcon />
                     </Button>
-                </Stack>
+                </Box>
             )}
             <Box width='100%'>
                 <DataGrid
