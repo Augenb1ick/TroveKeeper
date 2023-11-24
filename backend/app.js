@@ -26,6 +26,15 @@ const limiter = rateLimit({
 });
 
 const app = express();
+
+app.use(
+    cors({
+        origin: '*',
+        credentials: true,
+        methods: 'GET, PUT, PATCH, POST, DELETE',
+        allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+    })
+);
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -42,15 +51,6 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// app.use(
-//     cors({
-//         origin: '*',
-//         credentials: true,
-//         methods: 'GET, PUT, PATCH, POST, DELETE',
-//         allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-//     })
-// );
 
 app.use(requestLogger);
 app.use('/', require('./routes/index'));
