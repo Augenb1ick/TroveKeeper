@@ -19,7 +19,10 @@ import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import ItemCard from '../Components/ItemCard';
 import { useSnackBars } from '../context/SnackBarsContext';
-import { UPDATING_ITEM_POSTER_ERROR_MESSAGE } from '../utills/constants';
+import {
+    API_URL,
+    UPDATING_ITEM_POSTER_ERROR_MESSAGE,
+} from '../utills/constants';
 import { useTranslation } from 'react-i18next';
 import { io } from 'socket.io-client';
 import { useUsers } from '../context/UsersContext';
@@ -116,7 +119,7 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
     }, []);
 
     useEffect(() => {
-        const newSocket = io('http://localhost:4000');
+        const newSocket = io(API_URL);
 
         newSocket.on('connect', () => {
             console.log('Connected to socket');
