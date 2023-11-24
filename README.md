@@ -1,6 +1,6 @@
 # TroveKeeper
 
-The Collection is a dynamic web application designed for managing personal collections. Originally developed as a project during an internship at itransition, this application provides users with a platform to curate, organize, and maintain their personal collections effectively.
+TroveKeeper is a dynamic web application designed for managing personal collections. Originally developed as a project during an internship at itransition, this application provides users with a platform to curate, organize, and maintain their personal collections effectively.
 
 [Explore](https://trove-keeper.vercel.app/)
 
