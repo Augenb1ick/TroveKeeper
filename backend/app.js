@@ -12,7 +12,7 @@ const { createServer } = require('node:http');
 
 const commentsSocketsController = require('./controllers/comments');
 
-const { PORT = 4000 } = process.env;
+const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://127.0.0.1:27017/trovekeeperdb', {
     autoIndex: true,
