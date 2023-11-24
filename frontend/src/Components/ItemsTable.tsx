@@ -34,6 +34,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUsers } from '../context/UsersContext';
 import { useTranslation } from 'react-i18next';
 import { DialogSelectsFields } from '../types/dataTypes/DialogSelectsFields';
+import { useItems } from '../context/ItemsContext';
 
 export type ItemType = {
     id: string;
@@ -130,6 +131,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
     const { handleErrorSnackOpen } = useSnackBars();
     const { setChangedCollection } = useCollections();
     const { tags, setUpdatedTags, updatedTags } = useTags();
+    const { setAllItems } = useItems();
     const { currentUser } = useUsers();
     const { allCollections } = useCollections();
 
@@ -198,19 +200,32 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
         tags: string[],
         action: 'add' | 'remove'
     ) => {
-        const itemIndex = items.findIndex((item) => item.id === itemId);
-        const updatedItem = { ...items[itemIndex] };
-        if (!Array.isArray(updatedItem.tags)) return;
-        if (action === 'remove') {
-            updatedItem.tags = updatedItem.tags?.filter(
-                (tag) => !tags.includes(tag)
-            );
-        } else if (action === 'add') {
-            updatedItem.tags = [...updatedItem.tags, ...tags];
-        }
-        const updatedItems = [...items];
-        updatedItems[itemIndex] = updatedItem;
-        setItems(updatedItems);
+        setItems((prevItems) => {
+            return prevItems.map((item) => {
+                if (item.id === itemId) {
+                    let updatedTags: string[] = [];
+                    if (action === 'remove') {
+                        if (item.tags?.length)
+                            updatedTags = item.tags.filter(
+                                (tag) => !tags.includes(tag)
+                            );
+                    } else if (action === 'add') {
+                        if (item.tags?.length) {
+                            const uniqueTags = new Set([...item.tags, ...tags]);
+                            updatedTags = [...uniqueTags];
+                        } else {
+                            updatedTags = tags;
+                        }
+                    }
+
+                    return {
+                        ...item,
+                        tags: updatedTags,
+                    };
+                }
+                return item;
+            });
+        });
     };
 
     const handleTagsCreation = async (
@@ -224,7 +239,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                     name: tag,
                 }));
                 await tagsApi.createTags(tagsToSend, itemId);
-                updateItemTagsInTable(itemId, tagsToCreate, 'add');
+
                 setUpdatedTags(tagsToCreate);
             }
 
@@ -233,9 +248,10 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                     name: tag,
                 }));
                 await tagsApi.addItemsToTags(tagsToSend, itemId);
-                updateItemTagsInTable(itemId, tagsToAdd, 'add');
                 setUpdatedTags(tagsToAdd);
             }
+            const tagsToUpdateInTable = [...tagsToCreate, ...tagsToAdd];
+            updateItemTagsInTable(itemId, tagsToUpdateInTable, 'add');
         } catch (error) {
             console.log(error);
             handleErrorSnackOpen('Failed to update tags');
@@ -305,8 +321,12 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
 
     const extractCustomFieldValues = (
         newItemValues: DialogFormValues
-    ): { fieldId: string; fieldValue: string }[] => {
-        const customFieldValues: { fieldId: string; fieldValue: string }[] = [];
+    ): { fieldId: string; fieldValue: string; field: string }[] => {
+        const customFieldValues: {
+            fieldId: string;
+            fieldValue: string;
+            field: string;
+        }[] = [];
 
         for (const key in newItemValues) {
             if (key !== 'name' && key !== 'tags' && key !== 'id') {
@@ -317,6 +337,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                     customFieldValues.push({
                         fieldId: customField.id,
                         fieldValue: newItemValues[key] as string,
+                        field: key,
                     });
                 }
             }
@@ -326,7 +347,11 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
     };
 
     const handleCustomFieldValues = async (
-        customFieldValues: { fieldId: string; fieldValue: string }[],
+        customFieldValues: {
+            fieldId: string;
+            fieldValue: string;
+            field: string;
+        }[],
         itemId: string
     ) => {
         try {
@@ -337,7 +362,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                         itemId,
                         el.fieldId
                     );
-                    setItems([...items, { id: String(itemId) }]);
+                    updateItemsWithNewValue(itemId, el.field, el.fieldValue);
                 }
             }
         } catch (error) {
@@ -513,8 +538,11 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 .filter((tag: string) => allTags.includes(tag))
         );
 
-        const customFieldValues: { fieldId: string; fieldValue: string }[] =
-            extractCustomFieldValues(newItemValues);
+        const customFieldValues: {
+            fieldId: string;
+            fieldValue: string;
+            field: string;
+        }[] = extractCustomFieldValues(newItemValues);
 
         try {
             const item = await itemsApi.createItem(
@@ -523,10 +551,17 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 currentUser.name,
                 getCollectionName(collectionId) || ''
             );
+            setAllItems((prev) => [...prev, item]);
+            setItems((prevItems) => [
+                ...prevItems,
+                {
+                    id: String(item._id),
+                    name: newItemName,
+                },
+            ]);
             if (!item) throw new Error('Failed to create item');
 
             await collectionsApi.addItemToCollection(collectionId, item._id);
-            setChangedCollection(collectionId);
 
             await handleTagsCreation(tagsToCreate, tagsToAdd, item._id);
             await handleCustomFieldValues(customFieldValues, item._id);
@@ -605,7 +640,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
             headerName: headerName,
             type: field.fieldType,
             id: field._id,
-            width: 200,
+            width: 100,
             isRequired: field.isRequired,
             renderCell: (params: GridRenderCellParams) => {
                 const row = params.row;
@@ -632,7 +667,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
             headerName: headerName,
             type: field.fieldType,
             id: field._id,
-            width: 200,
+            width: 100,
             isRequired: field.isRequired,
             valueGetter: (params: GridRenderCellParams) => {
                 const row = params.row;

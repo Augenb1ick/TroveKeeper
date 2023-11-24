@@ -93,7 +93,6 @@ const AllCollections = () => {
                     />
                 ))}
             </AllCollectionsSection>
-
             <AllCollectionsSection sectionTitle={t('popularTags')}>
                 {tags.length ? (
                     <Box sx={{ cursor: 'pointer' }}>

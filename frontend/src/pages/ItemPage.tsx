@@ -1,4 +1,11 @@
-import { Box, Chip, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    Chip,
+    IconButton,
+    TextField,
+    Typography,
+} from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 import { TagDataType } from '../types/dataTypes/TagDataType';
 import { itemsApi } from '../utills/api/itemsApi';
@@ -14,6 +21,20 @@ import ItemCard from '../Components/ItemCard';
 import { useSnackBars } from '../context/SnackBarsContext';
 import { UPDATING_ITEM_POSTER_ERROR_MESSAGE } from '../utills/constants';
 import { useTranslation } from 'react-i18next';
+import { io } from 'socket.io-client';
+import { useUsers } from '../context/UsersContext';
+import Comment from '../Components/Comment';
+import { formatDate } from '../utills/formatDate';
+import SendIcon from '@mui/icons-material/Send';
+
+interface CommentDataType {
+    _id: string;
+    itemId: string;
+    owner: string;
+    ownerName: string;
+    text: string;
+    createdAt: string;
+}
 
 interface ItemPageProps {
     itemId: string;
@@ -25,6 +46,7 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
     });
     const { allCollections } = useCollections();
     const { tags } = useTags();
+    const { currentUser, isLoggedIn } = useUsers();
     const { handleErrorSnackOpen } = useSnackBars();
     const navigate = useNavigate();
 
@@ -35,6 +57,9 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
     const [itemsTable, setItemTable] = useState<{ [key: string]: string }[]>(
         []
     );
+    const [socket, setSocket] = useState<any>(null);
+    const [comments, setComments] = useState<CommentDataType[]>([]);
+    const [userComment, setUserComment] = useState('');
 
     const handleChangeItemPoster = (poster: string) => {
         if (!poster) return;
@@ -90,6 +115,55 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
             .catch((err) => console.log(err));
     }, []);
 
+    useEffect(() => {
+        const newSocket = io('http://localhost:4000');
+
+        newSocket.on('connect', () => {
+            console.log('Connected to socket');
+            newSocket.emit('joinItemRoom', itemId);
+        });
+
+        newSocket.on('allComments', (commentsData: CommentDataType[]) => {
+            setComments(commentsData);
+        });
+
+        newSocket.on('newComment', (newComment: CommentDataType) => {
+            setComments((prevComments) => [...prevComments, newComment]);
+        });
+        newSocket.on('deleteComment', (deletedCommentId: string) => {
+            setComments((prevComments) =>
+                prevComments.filter(
+                    (comment) => comment._id !== deletedCommentId
+                )
+            );
+        });
+
+        setSocket(newSocket);
+
+        return () => {
+            newSocket.disconnect();
+        };
+    }, [itemId]);
+
+    const handleAddComment = () => {
+        if (!userComment) return;
+        if (socket) {
+            socket.emit('addComment', {
+                itemId,
+                owner: currentUser._id,
+                ownerName: currentUser.name,
+                text: userComment,
+            });
+            setUserComment('');
+        }
+    };
+
+    const handleDeleteComment = (commentId: string) => {
+        if (socket) {
+            socket.emit('deleteComment', { itemId, commentId });
+        }
+    };
+
     return (
         <Box
             component='section'
@@ -125,7 +199,7 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
             ) : (
                 ''
             )}
-            {t('info')}
+            <Typography variant='h6'>{t('info')}</Typography>
             <Box
                 display='flex'
                 flexDirection='row'
@@ -176,10 +250,52 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
                     <Typography p='30px 0'>{t('noInfo')}</Typography>
                 )}
             </Box>
-            {t('comments')}
-            <Box p={'10px'} border={'1px solid gray'} borderRadius={'8px'}>
-                {t('noComments')}
+
+            <Typography variant='h6'>{t('comments')}</Typography>
+            <Box display='flex' flexDirection={'column'} gap='20px'>
+                {comments.length
+                    ? comments.map(
+                          (comment: CommentDataType, index: number) => (
+                              <Comment
+                                  key={index}
+                                  avatarSeed={index}
+                                  ownerName={comment.ownerName}
+                                  ownerId={comment.owner}
+                                  commentDate={formatDate(comment.createdAt)}
+                                  commentText={comment.text}
+                                  commentId={comment._id}
+                                  handleDeleteComment={handleDeleteComment}
+                              />
+                          )
+                      )
+                    : t('noComments')}
             </Box>
+            {isLoggedIn && (
+                <Box
+                    display={'flex'}
+                    flexDirection={'row'}
+                    flexWrap={'wrap'}
+                    gap='20px'
+                    width={'100%'}
+                >
+                    <TextField
+                        sx={{ width: 'calc(100% - 80px)' }}
+                        placeholder='Add comment'
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                handleAddComment();
+                            }
+                        }}
+                        value={userComment}
+                        onChange={(event) => {
+                            setUserComment(event.target.value);
+                        }}
+                    />
+                    <IconButton sx={{ p: '15px' }} onClick={handleAddComment}>
+                        <SendIcon />
+                    </IconButton>
+                </Box>
+            )}
         </Box>
     );
 };

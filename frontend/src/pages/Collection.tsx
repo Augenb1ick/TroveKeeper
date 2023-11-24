@@ -142,7 +142,6 @@ const Collection: FC<CollectionProps> = ({ id }) => {
                             onUpdate={(newValue) =>
                                 handleFieldUpdate('name', newValue)
                             }
-                            key={collectionFields.name}
                             disabled={!isOwner}
                         />
                         <EditableField
@@ -150,7 +149,6 @@ const Collection: FC<CollectionProps> = ({ id }) => {
                             onUpdate={(newValue) =>
                                 handleFieldUpdate('description', newValue)
                             }
-                            key={collectionFields.description}
                             disabled={!isOwner}
                         />
                         <CategoriesMenu

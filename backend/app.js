@@ -7,6 +7,10 @@ const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { Server } = require('socket.io');
+const { createServer } = require('node:http');
+
+const commentsSocketsController = require('./controllers/comments');
 
 const { PORT = 4000 } = process.env;
 
@@ -22,6 +26,14 @@ const limiter = rateLimit({
 });
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: 'GET, PUT, PATCH, POST, DELETE',
+    },
+});
+commentsSocketsController(io);
 
 app.use(helmet());
 // app.use(limiter);
@@ -45,6 +57,6 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
 });

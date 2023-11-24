@@ -117,7 +117,7 @@ const ItemCard: FC<ItemCardInterface> = ({ itemId, handleChangePoster }) => {
                 )}
             </Box>
             <Box>
-                <Typography component='h1' variant='h3'>
+                <Typography component='h1' variant='h4'>
                     {itemData?.name || ''}
                 </Typography>
                 <Box
