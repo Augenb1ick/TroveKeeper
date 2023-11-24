@@ -30,7 +30,9 @@ const server = createServer(app);
 const io = new Server(server, {
     cors: {
         origin: '*',
+        credentials: true,
         methods: 'GET, PUT, PATCH, POST, DELETE',
+        allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
     },
 });
 commentsSocketsController(io);
@@ -41,14 +43,14 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-    cors({
-        origin: '*',
-        credentials: true,
-        methods: 'GET, PUT, PATCH, POST, DELETE',
-        allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
-    })
-);
+// app.use(
+//     cors({
+//         origin: '*',
+//         credentials: true,
+//         methods: 'GET, PUT, PATCH, POST, DELETE',
+//         allowedHeaders: ['Content-Type', 'origin', 'Authorization'],
+//     })
+// );
 
 app.use(requestLogger);
 app.use('/', require('./routes/index'));
