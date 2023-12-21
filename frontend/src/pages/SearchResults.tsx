@@ -1,13 +1,14 @@
 import { Box, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
-import { useSearch } from '../context/SearchContext';
 import { itemsApi } from '../utills/api/itemsApi';
 import { ItemDataType } from '../types/dataTypes/ItemDataType';
-import ItemCard from '../Components/ItemCard';
 import { useTranslation } from 'react-i18next';
+import ItemCard from '../сomponents/ItemCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const SearchResults = () => {
-    const { searchQuery } = useSearch();
+    const { searchQuery } = useSelector((state: RootState) => state.search);
     const [foundItems, setFoundItems] = useState<ItemDataType[]>();
 
     const { t } = useTranslation('translation', {

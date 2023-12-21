@@ -1,15 +1,15 @@
 import { Box, Chip, Typography } from '@mui/material';
-import React from 'react';
-import { useItems } from '../context/ItemsContext';
 import { TagDataType } from '../types/dataTypes/TagDataType';
-import ItemCard from '../Components/ItemCard';
 import { useTranslation } from 'react-i18next';
+import ItemCard from '../сomponents/ItemCard';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const TagsPage = ({ tag }: { tag: TagDataType }) => {
     const { t } = useTranslation('translation', {
         keyPrefix: 'tagPage',
     });
-    const { allItems } = useItems();
+    const { allItems } = useSelector((state: RootState) => state.items);
     const allTagsItems = allItems.filter((item) =>
         tag.items.includes(item._id)
     );

@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import CollectionsIcon from '@mui/icons-material/Collections';
 
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Logo = () => {

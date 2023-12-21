@@ -5,10 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from '@mui/material';
-import {
-    DELETE_COLLECTION_DIALOG_TITLE,
-    DELETE_COLLECTION_DIALOG_BTN_TEXT,
-} from '../utills/constants';
+
 import { useTranslation } from 'react-i18next';
 
 interface ConfirmationDialogProps {

@@ -1,22 +1,23 @@
 import { ChangeEvent, FC, useState } from 'react';
 import { Box, Button } from '@mui/material';
-import ItemsTable from '../Components/ItemsTable';
-import EditableField from '../Components/EditableField';
+import ItemsTable from '../сomponents/ItemsTable';
+import EditableField from '../сomponents/EditableField';
 import {
     COLLECTION_FIELD_MAPPINGS,
     UPDATING_COLLECTION_ERROR_MESSAGE,
     DELETING_COLLECTION_ERROR_MESSAGE,
 } from '../utills/constants';
-import AddPosterComponent from '../Components/AddPosterComponent';
 import { collectionsApi } from '../utills/api/collectionsApi';
-import { useCollections } from '../context/CollectionsContext';
 import { CollectionDataType } from '../types/dataTypes/CollectionDataType';
-import { useUsers } from '../context/UsersContext';
-import { useSnackBars } from '../context/SnackBarsContext';
-import ConfirmationDialog from '../Components/ConfirmationDialog';
 import { useNavigate } from 'react-router-dom';
-import CategoriesMenu from '../Components/CategoriesMenu';
 import { useTranslation } from 'react-i18next';
+import ConfirmationDialog from '../сomponents/ConfirmationDialog';
+import CategoriesMenu from '../сomponents/CategoriesMenu';
+import AddPosterComponent from '../сomponents/AddPosterComponent';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { handleErrorSnackOpen } from '../redux/slices/snackBarsSlice';
+import { setChangedCollection } from '../redux/slices/collectionsSlice';
 
 interface CollectionProps {
     id: string;
@@ -37,10 +38,12 @@ const Collection: FC<CollectionProps> = ({ id }) => {
     });
     const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] =
         useState(false);
-    const { allCollections, setChangedCollection } = useCollections();
-    const { currentUser } = useUsers();
-    const { handleErrorSnackOpen } = useSnackBars();
+    const { allCollections } = useSelector(
+        (state: RootState) => state.collections
+    );
+    const { currentUser } = useSelector((state: RootState) => state.appUsers);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const getCollection = (id: string) => {
         return (
@@ -88,7 +91,9 @@ const Collection: FC<CollectionProps> = ({ id }) => {
                     }
                 })
                 .catch(() =>
-                    handleErrorSnackOpen(UPDATING_COLLECTION_ERROR_MESSAGE)
+                    dispatch(
+                        handleErrorSnackOpen(UPDATING_COLLECTION_ERROR_MESSAGE)
+                    )
                 );
         }
     };
@@ -105,11 +110,13 @@ const Collection: FC<CollectionProps> = ({ id }) => {
         collectionsApi
             .deleteCollection(id)
             .then((collection) => {
-                setChangedCollection(collection._id);
+                dispatch(setChangedCollection(collection._id));
                 navigate('/my-collections');
             })
             .catch(() => {
-                handleErrorSnackOpen(DELETING_COLLECTION_ERROR_MESSAGE);
+                dispatch(
+                    handleErrorSnackOpen(DELETING_COLLECTION_ERROR_MESSAGE)
+                );
             })
             .finally(() => handleCloseDialogs());
     };

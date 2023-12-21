@@ -2,105 +2,98 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import SignIn from './pages/SignIn';
 import AdminPanel from './pages/AdminPanel';
 import SignUp from './pages/SignUp';
-import { useUsers } from './context/UsersContext';
 import { useEffect, useState } from 'react';
 import { managingUsersApi } from './utills/api/usersApi';
 import Collection from './pages/Collection';
-import Header from './Components/Header';
+import Header from './сomponents/Header';
 import MyCollections from './pages/MyCollections';
 import NotFound from './pages/NotFound';
 import Main from './pages/Main';
-import { useCollections } from './context/CollectionsContext';
 import { collectionsApi } from './utills/api/collectionsApi';
-import ProtectedUsersRouteElement from './Components/PortectedUsersRoute';
-import Snackbars from './Components/Snackbar';
+import ProtectedUsersRouteElement from './сomponents/PortectedUsersRoute';
+import Snackbars from './сomponents/Snackbar';
 import AllCollections from './pages/AllCollections';
-import ProtectedAdminRouteElement from './Components/ProtectedAdminRoute';
+import ProtectedAdminRouteElement from './сomponents/ProtectedAdminRoute';
 import { CollectionDataType } from './types/dataTypes/CollectionDataType';
-import { useTags } from './context/TagsContext';
 import { tagsApi } from './utills/api/tagsApi';
 import { itemsApi } from './utills/api/itemsApi';
 import ItemPage from './pages/ItemPage';
-import { useItems } from './context/ItemsContext';
 import SearchResults from './pages/SearchResults';
-import Preloader from './Components/Preloader';
+import Preloader from './сomponents/Preloader';
 import TagsPage from './pages/TagsPage';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from './redux/store';
+import { setCurrentUser, setIsLoggedIn } from './redux/slices/usersSlice';
+import { setAllCollections } from './redux/slices/collectionsSlice';
+import { setAllItems } from './redux/slices/itemsSlice';
+import { setTags } from './redux/slices/tagsSlice';
 
 function App() {
-    const { setIsLoggedIn, setCurrentUser, isLoggedIn, currentUser } =
-        useUsers();
-    const { allCollections, setAllCollections, changedCollection } =
-        useCollections();
-    const { setTags, tags, updatedTags } = useTags();
-    const { allItems, setAllItems } = useItems();
-    const [isLoading, setIsLoading] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { currentUser, isLoggedIn } = useSelector(
+        (state: RootState) => state.appUsers
+    );
+    const { allCollections, changedCollection } = useSelector(
+        (state: RootState) => state.collections
+    );
+    const { allItems } = useSelector((state: RootState) => state.items);
+
+    const { tags, updatedTags } = useSelector(
+        (state: RootState) => state.appTags
+    );
 
     useEffect(() => {
-        setIsLoading(true);
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
             managingUsersApi
                 .getCurrentUserInfo()
                 .then(() => {
-                    setIsLoggedIn(true);
-                    setIsLoading(false);
+                    dispatch(setIsLoggedIn(true));
                     navigate(location.pathname);
                 })
-                .catch((err) => console.log(err))
-                .finally(() => setIsLoading(false));
+                .catch((err) => console.log(err));
         }
     }, []);
 
     useEffect(() => {
-        setIsLoading(true);
         tagsApi
             .getAllTags()
             .then((allTags) => {
-                setTags(allTags);
-                setIsLoading(false);
+                dispatch(setTags(allTags));
             })
-            .catch((err) => console.log(err))
-            .finally(() => setIsLoading(false));
+            .catch((err) => console.log(err));
     }, [updatedTags]);
 
     useEffect(() => {
-        setIsLoading(true);
         if (isLoggedIn) {
             managingUsersApi
                 .getCurrentUserInfo()
                 .then((user) => {
-                    setCurrentUser(user);
-                    setIsLoading(false);
+                    dispatch(setCurrentUser(user));
                 })
-                .catch((err) => console.log(err))
-                .finally(() => setIsLoading(false));
+                .catch((err) => console.log(err));
         }
     }, [isLoggedIn]);
 
     useEffect(() => {
-        setIsLoading(true);
         collectionsApi
             .getAllCollections()
             .then((collections) => {
                 const activeCollections = collections.filter(
                     (collection: CollectionDataType) => collection.isActive
                 );
-                setAllCollections(activeCollections);
-                setIsLoading(false);
+                dispatch(setAllCollections(activeCollections));
             })
-            .catch((err) => console.log(err))
-            .finally(() => setIsLoading(false));
-        setIsLoading(true);
+            .catch((err) => console.log(err));
         itemsApi
             .getAllItems()
             .then((items) => {
-                setAllItems(items);
-                setIsLoading(false);
+                dispatch(setAllItems(items));
             })
-            .catch((err) => console.log(err))
-            .finally(() => setIsLoading(false));
+            .catch((err) => console.log(err));
     }, [changedCollection]);
 
     const routeContainsHeader =

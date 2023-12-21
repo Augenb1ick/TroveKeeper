@@ -4,8 +4,9 @@ import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useSearch } from '../context/SearchContext';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
+import { setSearchQuery } from '../redux/slices/searchSlice';
 
 interface SearchQuery {
     searchQuery: string;
@@ -55,16 +56,16 @@ const SearchInput = () => {
     const { t } = useTranslation('translation', { keyPrefix: 'header' });
 
     const { register, handleSubmit } = useForm<SearchQuery>();
-    const { setSearchQuery } = useSearch();
     const navigate = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch();
 
     const isSearchPage = location.pathname === '/search';
 
     const onSubmit: SubmitHandler<SearchQuery> = (data) => {
         const inputSearchQuery = data.searchQuery;
         if (!inputSearchQuery) return;
-        setSearchQuery(inputSearchQuery);
+        dispatch(setSearchQuery(inputSearchQuery));
         localStorage.setItem('last-search-query', inputSearchQuery);
         if (!isSearchPage) navigate('/search');
     };

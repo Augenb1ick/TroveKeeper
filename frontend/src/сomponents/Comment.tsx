@@ -1,10 +1,8 @@
 import { Box, Button, Typography } from '@mui/material';
 import React, { FC } from 'react';
-import ReactNiceAvatar, {
-    AvatarFullConfig,
-    genConfig,
-} from 'react-nice-avatar';
-import { useUsers } from '../context/UsersContext';
+import ReactNiceAvatar, { genConfig } from 'react-nice-avatar';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 interface CommentProps {
     ownerName: string;
@@ -26,7 +24,7 @@ const Comment: FC<CommentProps> = ({
     ownerId,
 }) => {
     const myConfig = genConfig(String(avatarSeed));
-    const { currentUser } = useUsers();
+    const { currentUser } = useSelector((state: RootState) => state.appUsers);
     const isOwner = currentUser._id === ownerId || currentUser.role === 'admin';
 
     return (

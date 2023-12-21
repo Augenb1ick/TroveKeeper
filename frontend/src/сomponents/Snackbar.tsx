@@ -2,8 +2,10 @@ import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { FC, forwardRef } from 'react';
-import { useSnackBars } from '../context/SnackBarsContext';
 import { AUTO_HIDE_SNACK_DURATION, SNACK_POSITION } from '../utills/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { handleSnacksClose } from '../redux/slices/snackBarsSlice';
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -13,13 +15,13 @@ const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
 });
 
 const Snackbars: FC = () => {
+    const dispatch = useDispatch();
     const {
         successSnackText,
         errorSnackText,
         isSuccessSnackOpen,
         isErrorSnackOpen,
-        handleSnacksClose,
-    } = useSnackBars();
+    } = useSelector((state: RootState) => state.snackBars);
 
     const handleClose = (
         event?: React.SyntheticEvent | Event,
@@ -28,7 +30,7 @@ const Snackbars: FC = () => {
         if (reason === 'clickaway') {
             return;
         }
-        handleSnacksClose();
+        dispatch(handleSnacksClose());
     };
 
     return (

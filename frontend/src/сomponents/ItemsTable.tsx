@@ -14,29 +14,30 @@ import {
     TABLE_PAGE_SIZE,
     TABLE_PAGE_SIZE_OPTIONS,
 } from '../utills/constants';
-import { Box, Button, Chip, Stack } from '@mui/material';
+import { Box, Button, Chip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DialogFormValues } from './CollectionDialog';
 import CollectionDialog from './CollectionDialog';
 import { fieldsApi } from '../utills/api/fieldsApi';
-import { useSnackBars } from '../context/SnackBarsContext';
 import { itemsApi } from '../utills/api/itemsApi';
 import { tagsApi } from '../utills/api/tagsApi';
 import { fieldValueApi } from '../utills/api/fieldValueApi';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { collectionsApi } from '../utills/api/collectionsApi';
-import { useCollections } from '../context/CollectionsContext';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useTags } from '../context/TagsContext';
 import { useNavigate } from 'react-router-dom';
-import { useUsers } from '../context/UsersContext';
 import { useTranslation } from 'react-i18next';
 import { DialogSelectsFields } from '../types/dataTypes/DialogSelectsFields';
-import { useItems } from '../context/ItemsContext';
 import DownloadIcon from '@mui/icons-material/Download';
 import exportFromJSON from 'export-from-json';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { handleErrorSnackOpen } from '../redux/slices/snackBarsSlice';
+import { setChangedCollection } from '../redux/slices/collectionsSlice';
+import { setAllItems } from '../redux/slices/itemsSlice';
+import { setUpdatedTags } from '../redux/slices/tagsSlice';
 
 export type ItemType = {
     id: string;
@@ -127,15 +128,18 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
     ];
     const addNewFieldInputs = [initialTableFields[1]];
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const buttonTextSx = { textTransform: 'none' };
 
-    const { handleErrorSnackOpen } = useSnackBars();
-    const { setChangedCollection } = useCollections();
-    const { tags, setUpdatedTags, updatedTags } = useTags();
-    const { setAllItems } = useItems();
-    const { currentUser } = useUsers();
-    const { allCollections } = useCollections();
+    const { tags, updatedTags } = useSelector(
+        (state: RootState) => state.appTags
+    );
+    const { currentUser } = useSelector((state: RootState) => state.appUsers);
+    const { allItems } = useSelector((state: RootState) => state.items);
+    const { allCollections } = useSelector(
+        (state: RootState) => state.collections
+    );
 
     const [allTags, setAllTags] = useState<string[]>([]);
     const [fieldDialogOpen, setFieldDialogOpen] = useState(false);
@@ -242,7 +246,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 }));
                 await tagsApi.createTags(tagsToSend, itemId);
 
-                setUpdatedTags(tagsToCreate);
+                dispatch(setUpdatedTags(tagsToCreate));
             }
 
             if (tagsToAdd.length > 0) {
@@ -250,13 +254,13 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                     name: tag,
                 }));
                 await tagsApi.addItemsToTags(tagsToSend, itemId);
-                setUpdatedTags(tagsToAdd);
+                dispatch(setUpdatedTags(tagsToAdd));
             }
             const tagsToUpdateInTable = [...tagsToCreate, ...tagsToAdd];
             updateItemTagsInTable(itemId, tagsToUpdateInTable, 'add');
         } catch (error) {
             console.log(error);
-            handleErrorSnackOpen('Failed to update tags');
+            dispatch(handleErrorSnackOpen('Failed to update tags'));
         }
     };
 
@@ -494,8 +498,10 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 column.field === fieldName || column.headerName === fieldName
         );
         if (isFieldAlreadyExists) {
-            handleErrorSnackOpen(
-                `Field with the name "${fieldName}" already exists`
+            dispatch(
+                handleErrorSnackOpen(
+                    `Field with the name "${fieldName}" already exists`
+                )
             );
             return;
         }
@@ -516,7 +522,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 }
             })
             .catch(() => {
-                handleErrorSnackOpen(ADDING_FIELD_ERROR_MESSAGE);
+                dispatch(handleErrorSnackOpen(ADDING_FIELD_ERROR_MESSAGE));
             });
         handleCloseAllDialogs();
     };
@@ -553,7 +559,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 currentUser.name,
                 getCollectionName(collectionId) || ''
             );
-            setAllItems((prev) => [...prev, item]);
+            dispatch(setAllItems([...allItems, item]));
             setItems((prevItems) => [
                 ...prevItems,
                 {
@@ -568,7 +574,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
             await handleTagsCreation(tagsToCreate, tagsToAdd, item._id);
             await handleCustomFieldValues(customFieldValues, item._id);
         } catch (error) {
-            handleErrorSnackOpen(CREATING_ITEM_ERROR_MESSAGE);
+            dispatch(handleErrorSnackOpen(CREATING_ITEM_ERROR_MESSAGE));
             console.error(error);
         }
 
@@ -612,7 +618,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
         collectionsApi
             .deleteItemsFromCollection(collectionId, selectedItems)
             .then((collection) => {
-                setChangedCollection(collection._id);
+                dispatch(setChangedCollection(collection._id));
             })
             .catch((err) => console.log(err));
 
@@ -698,7 +704,7 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                 setTableFields([...initialTableFields, ...newTableFields]);
             })
             .catch(() => {
-                handleErrorSnackOpen(SERVER_ERROR_MESSAGE);
+                dispatch(handleErrorSnackOpen(SERVER_ERROR_MESSAGE));
             });
     }, []);
 
@@ -755,12 +761,12 @@ const ItemsTable: FC<ItemsTableProps> = ({ isOwner, collectionId }) => {
                     })
                     .catch((err) => {
                         console.log(err);
-                        handleErrorSnackOpen(SERVER_ERROR_MESSAGE);
+                        dispatch(handleErrorSnackOpen(SERVER_ERROR_MESSAGE));
                     });
             })
             .catch((err) => {
                 console.log(err);
-                handleErrorSnackOpen(SERVER_ERROR_MESSAGE);
+                dispatch(handleErrorSnackOpen(SERVER_ERROR_MESSAGE));
             });
     }, [tableFields, items.length]);
 

@@ -1,23 +1,29 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import CollectionCard from '../Components/CollectionCard';
 import { collectionsApi } from '../utills/api/collectionsApi';
 import { CollectionDataType } from '../types/dataTypes/CollectionDataType';
-import { useCollections } from '../context/CollectionsContext';
-import CreateCollectionDialog from '../Components/CreateCollectionDialog';
-import { useSnackBars } from '../context/SnackBarsContext';
 import { CREATING_COLLECTION_ERROR_MESSAGE } from '../utills/constants';
 import { useTranslation } from 'react-i18next';
+import CreateCollectionDialog from '../сomponents/CreateCollectionDialog';
+import CollectionCard from '../сomponents/CollectionCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { handleErrorSnackOpen } from '../redux/slices/snackBarsSlice';
+import { RootState } from '../redux/store';
+import {
+    setAllCollections,
+    setUsersCollections,
+} from '../redux/slices/collectionsSlice';
 
 const MyCollections = () => {
     const { t } = useTranslation('translation', {
         keyPrefix: 'myCollections',
     });
 
-    const { usersCollections, setUsersCollections, setAllCollections } =
-        useCollections();
+    const dispatch = useDispatch();
 
-    const { handleErrorSnackOpen } = useSnackBars();
+    const { usersCollections, allCollections } = useSelector(
+        (state: RootState) => state.collections
+    );
 
     const [createCollectionDialogOpen, setCreateCollectionDialogOpen] =
         useState(false);
@@ -34,12 +40,16 @@ const MyCollections = () => {
         collectionsApi
             .createCollection(data)
             .then((collection) => {
-                setUsersCollections((prev) => [collection, ...prev]);
-                setAllCollections((prev) => [...prev, collection]);
+                dispatch(
+                    setUsersCollections([collection, ...usersCollections])
+                );
+                dispatch(setAllCollections([...allCollections, collection]));
                 handleCloseDialogs();
             })
             .catch(() => {
-                handleErrorSnackOpen(CREATING_COLLECTION_ERROR_MESSAGE);
+                dispatch(
+                    handleErrorSnackOpen(CREATING_COLLECTION_ERROR_MESSAGE)
+                );
             });
     };
 
@@ -50,7 +60,7 @@ const MyCollections = () => {
                 const activeCollections = collections.filter(
                     (collection: CollectionDataType) => collection.isActive
                 );
-                setUsersCollections(activeCollections.reverse());
+                dispatch(setUsersCollections(activeCollections.reverse()));
             })
             // TODO: handle errors with snakbars
             .catch((err) => console.log(err));
