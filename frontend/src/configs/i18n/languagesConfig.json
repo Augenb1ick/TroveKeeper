@@ -1,0 +1,314 @@
+{
+    "en": {
+        "translation": {
+            "header": {
+                "home": "Home",
+                "allCollections": "All collections",
+                "myCollections": "My collections",
+                "adminPanel": "Admin pannel",
+                "signin": "Sign In",
+                "signup": "Sign Up",
+                "logout": "Log out",
+                "searchInput": "Search"
+            },
+            "notFound": {
+                "text": "The page you are looking for doesn't exist",
+                "buttonText": "Return to the home page"
+            },
+            "main": {
+                "mainTitle": "TroveKeeper is where your most cherished possessions find a home",
+                "mainText": "TroveKeeper offers an effortless means to curate your diverse collections. From shaping and customizing your collection to seamlessly adding items, immerse yourself in the collections of others and draw inspiration to curate your unique treasures.",
+                "browseButton": "Browse all collections"
+            },
+            "auth": {
+                "signIn": "Sign In",
+                "signInButton": "Sign In",
+                "signUp": "Sign Up",
+                "signUpButton": "Sign Up",
+                "username": "User name",
+                "email": "E-mail address",
+                "password": "Password",
+                "required": "This field is required",
+                "noAcc": "Don't have an account? Sign Up",
+                "haveAcc": "Already have an account? Sign in",
+                "patternEmail": "Please enter valid e-mail",
+                "signUpError": "Unexpected registration error",
+                "Error403": "Your account is temporarily blocked. If you believe this is a mistake, please contact the administrator",
+                "signInError": "Unexpected authorization error",
+                "Error409": "A user with this email is already registered!",
+                "Error401": "Incorrect password or email!",
+                "successSignUpMessage": "Registration is completed. Welcome to TroveKeeper!"
+            },
+            "allCollections": {
+                "recentlyAddedItems": "Recently added items",
+                "biggestCollections": "Biggest collections",
+                "popularTags": "Populars tags",
+                "noTags": "No tags yet"
+            },
+            "myCollections": {
+                "empty": "Create your first collection",
+                "collections": "Your collections",
+                "addCollection": "Create collection",
+                "dialogTitle": "Create collection",
+                "dialogText": "Please fill the information below to create your collection",
+                "dialogButton": "Create",
+                "nameInput": "Name",
+                "descriptionInput": "Description",
+                "inputRequired": "This field is required",
+                "categorySelectTitle": "Category",
+                "categorySelectItemNoCategory": "No category",
+                "categorySelectItemBooks": "Books",
+                "categorySelectItemFilms": "Films",
+                "categorySelectItemStamps": "Stamps",
+                "categorySelectItemOther": "Other",
+                "itemsQuantity": "Items: "
+            },
+            "collectionCard": {
+                "itemsQuantity": "Items quantity: "
+            },
+            "itemCard": {
+                "fromCollection": "From collection",
+                "createdBy": "Created by",
+                "noAuthLike": "You need to be authorized to like or dislike an item",
+                "likeError": "Error accured when while attempting to like or dislike an item. Please try again"
+            },
+            "itemPage": {
+                "info": "Item's information",
+                "noInfo": "No info yet",
+                "comments": "Comments",
+                "noComments": "No comments yet",
+                "commentDeleteConfirm": "Are you sure you want to delete the comment?",
+                "commentPlaceholder": "Leave a comment..."
+            },
+            "collection": {
+                "deleteCollectionButtonText": "Delete collection",
+                "dialogs": {
+                    "tags": {
+                        "create": "Create",
+                        "placeholder": "Choose tags"
+                    },
+                    "requiredField": "This field is required",
+                    "buttons": {
+                        "addField": "Add field",
+                        "addItem": "Add item"
+                    },
+
+                    "addItemDialog": {
+                        "title": "Add item to your collection",
+                        "text": "Please fill in the information about the new item in your collection",
+                        "name": "Name",
+                        "tags": "Tags",
+                        "buttonText": "Add"
+                    },
+                    "addFieldDialog": {
+                        "title": "New field",
+                        "text": "Please fill in the information about the new field",
+                        "nameField": "Name",
+                        "requiredSelectTitle": "Required",
+                        "requiredSelectItemRequired": "Field is required",
+                        "requiredSelectItemNotRequired": "Field is not required",
+                        "typeSelectTitle": "Type",
+                        "typeSelectItemText": "Text",
+                        "typeSelectItemNumber": "Number",
+                        "typeSelectItemDate": "Date",
+                        "typeSelectItemCheckbox": "Checkbox",
+                        "buttonText": "Add"
+                    },
+                    "editItemDialog": {
+                        "title": "Edit item of your collection",
+                        "text": "Please edit the information of selected item",
+                        "nameField": "Name",
+                        "buttonText": "Edit"
+                    }
+                }
+            },
+            "searchPage": {
+                "resultsFor": "Search results for",
+                "noResults": "No items found",
+                "searchedQuantity": "Total items found:"
+            },
+            "tagPage": {
+                "title": "Items of tag"
+            },
+            "adminPanel": {
+                "title": "App users",
+                "blockButtonText": "Block",
+                "assignAdminButtonText": "Assign admin",
+                "demoteAdminButtonText": "Demote admin",
+                "tableFields": {
+                    "id": "Id",
+                    "name": "Name",
+                    "email": "Email",
+                    "regDate": "Date of registration",
+                    "lastLogin": "Last login",
+                    "isBlocked": "Status",
+                    "role": "Role"
+                }
+            },
+            "addPoster": {
+                "addPoster": "Add poster",
+                "uploadButtonText": "Upload"
+            },
+            "deleteCollectionDialog": {
+                "text": "Are you sure you want to delete your collection?",
+                "buttonText": "Delete"
+            }
+        }
+    },
+    "ru": {
+        "translation": {
+            "header": {
+                "home": "Главная",
+                "allCollections": "Все коллекции",
+                "myCollections": "Мои коллекции",
+                "adminPanel": "Панель администратора",
+                "signin": "Войти",
+                "signup": "Зарегистрироваться",
+                "logout": "Выйти",
+                "searchInput": "Поиск"
+            },
+            "notFound": {
+                "text": "Страница, которую вы ищете, не существует",
+                "buttonText": "Вернуться на главную"
+            },
+            "main": {
+                "mainTitle": "TroveKeeper, здесь ваши самые драгоценные вещи найдут своё место",
+                "mainText": "TroveKeeper предлагает простой способ управления вашими коллекциями. От создания и настройки вашей коллекции до редактированя элементов – погрузитесь в коллекции других и найдите вдохновение для хранения своих уникальных сокровищ.",
+                "browseButton": "Просмотреть все коллекции"
+            },
+            "auth": {
+                "signIn": "Вход",
+                "signInButton": "Войти",
+                "signUp": "Регистрация",
+                "signUpButton": "Зарегистрироваться",
+                "username": "Имя пользователя",
+                "email": "Электронная почта",
+                "password": "Пароль",
+                "noAcc": "Пока нет аккаунта? Зарегистрироваться",
+                "haveAcc": "Уже зарегистрированы? Войти",
+                "required": "Это поле обязательно",
+                "patternEmail": "Введите корректный адрес электронной почты",
+                "signUpError": "Неожиданная ошибка при регистрации",
+                "Error403": "Ваша учетная запись временно заблокирована. Если вы считаете, что это ошибка, свяжитесь с администратором.",
+                "signInError": "Неожиданная ошибка авторизации",
+                "Error409": "Пользователь с этим адресом электронной почты уже зарегистрирован!",
+                "Error401": "Неверный пароль или адрес электронной почты!",
+                "successSignUpMessage": "Вы успешно зарегистрированы. Добро пожаловать в TroveKeeper!"
+            },
+            "allCollections": {
+                "recentlyAddedItems": "Недавно добавленные предметы",
+                "biggestCollections": "Самые больше коллекции",
+                "popularTags": "Популярные тэги",
+                "noTags": "Пока тэгов нет"
+            },
+            "myCollections": {
+                "empty": "Создать свою первую кколлекцию",
+                "collections": "Ваши коллекции",
+                "addCollection": "Создать коллекцию",
+                "dialogTitle": "Создать коллекцию",
+                "dialogText": "Пожалуйста, заполните информацию ниже, чтобы создать вашу коллекцию",
+                "dialogButton": "Создать",
+                "nameInput": "Название",
+                "descriptionInput": "Описание",
+                "inputRequired": "Это поле обязательно",
+                "categorySelectTitle": "Категория",
+                "categorySelectItemNoCategory": "Без категории",
+                "categorySelectItemBooks": "Книги",
+                "categorySelectItemFilms": "Фильмы",
+                "categorySelectItemStamps": "Марки",
+                "categorySelectItemOther": "Другое",
+                "itemsQuantity": "Предметов: "
+            },
+            "itemCard": {
+                "fromCollection": "Из коллекции",
+                "createdBy": "Создано",
+                "noAuthLike": "Вам необходимо авторизоваться, чтобы поставить или убрать лайк",
+                "likeError": "Произошла ошибка при попытке поставить или убрать лайк. Пожалуйста, попробуйте снова."
+            },
+            "itemPage": {
+                "info": "Информация о предмете",
+                "noInfo": "Информации пока нет",
+                "comments": "Комментарии",
+                "noComments": "Пока нет комментариев",
+                "commentDeleteConfirm": "Вы уверены, что хотите удалить комментарий?",
+                "commentPlaceholder": "Оставьте комментарий..."
+            },
+            "collection": {
+                "addField": "Добавить поле",
+                "addItem": "Добавить элемент",
+
+                "deleteCollectionButtonText": "Удалить коллекцию",
+                "dialogs": {
+                    "tags": {
+                        "create": "Создать",
+                        "placeholder": "Выбрать тэги"
+                    },
+                    "requiredField": "Это обязательное поле",
+                    "buttons": {
+                        "addField": "Новое поле",
+                        "addItem": "Новый предмет"
+                    },
+                    "addItemDialog": {
+                        "title": "Добавить элемент в вашу коллекцию",
+                        "text": "Пожалуйста, заполните информацию о новом элементе в вашей коллекции",
+                        "nameField": "Название",
+                        "buttonText": "Добавить",
+                        "name": "Название",
+                        "tags": "Тэги"
+                    },
+                    "addFieldDialog": {
+                        "title": "Новое поле",
+                        "text": "Пожалуйста, заполните информацию о новом поле",
+                        "nameField": "Название",
+                        "requiredSelectTitle": "Обязательное поле",
+                        "requiredSelectItemRequired": "Поле обязательно",
+                        "requiredSelectItemNotRequired": "Поле не обязательно",
+                        "typeSelectTitle": "Тип поля",
+                        "typeSelectItemText": "Текст",
+                        "typeSelectItemNumber": "Число",
+                        "typeSelectItemDate": "Дата",
+                        "typeSelectItemCheckbox": "Флажок",
+                        "buttonText": "Добавить"
+                    },
+                    "editItemDialog": {
+                        "title": "Редактировать элемент вашей коллекции",
+                        "text": "Пожалуйста, отредактируйте информацию выбранного элемента",
+                        "nameField": "Название",
+                        "buttonText": "Редактировать"
+                    }
+                }
+            },
+            "searchPage": {
+                "resultsFor": "Результаты поиска для",
+                "noResults": "Предметы не найдены",
+                "searchedQuantity": "Всего найдено предметов:"
+            },
+            "tagPage": {
+                "title": "Предметы по тегу"
+            },
+            "adminPanel": {
+                "title": "Пользователи приложения",
+                "blockButtonText": "Заблокировать",
+                "assignAdminButtonText": "Назначить администратором",
+                "demoteAdminButtonText": "Снять администратора",
+                "tableFields": {
+                    "id": "Id",
+                    "name": "Имя",
+                    "email": "Электронная почта",
+                    "regDate": "Дата регистрации",
+                    "lastLogin": "Последний вход",
+                    "isBlocked": "Статус",
+                    "role": "Роль"
+                }
+            },
+            "addPoster": {
+                "addPoster": "Добавить постер",
+                "uploadButtonText": "Загрузить"
+            },
+            "deleteCollectionDialog": {
+                "text": "Вы уверены что хотите удалить коллекцию?",
+                "buttonText": "Удалить"
+            }
+        }
+    }
+}
