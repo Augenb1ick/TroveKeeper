@@ -16,7 +16,7 @@ import CreatableSelect from 'react-select/creatable';
 import { Fragment, useEffect, useState } from 'react';
 import { tagsApi } from '../utills/api/tagsApi';
 import { ItemType, TableField } from './ItemsTable';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 import { DARK_THEME_CREATABLE_SELECT_STYLES } from '../utills/constants';
 import { useTranslation } from 'react-i18next';
 

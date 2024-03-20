@@ -1,13 +1,12 @@
 import { Box, Typography } from '@mui/material';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { useCollections } from '../context/CollectionsContext';
-import CollectionCard from '../Components/CollectionCard';
+import CollectionCard from '../сomponents/CollectionCard';
 import { TagCloud } from 'react-tagcloud';
-import { useTags } from '../context/TagsContext';
-import { useItems } from '../context/ItemsContext';
-import ItemCard from '../Components/ItemCard';
+import ItemCard from '../сomponents/ItemCard';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 interface CloudTag {
     value: string;
@@ -18,9 +17,12 @@ const AllCollections = () => {
     const { t } = useTranslation('translation', {
         keyPrefix: 'allCollections',
     });
-    const { fiveBiggestCollections } = useCollections();
-    const { fiveRecentItems } = useItems();
-    const { tags } = useTags();
+    const { fiveBiggestCollections } = useSelector(
+        (state: RootState) => state.collections
+    );
+    const { fiveRecentItems } = useSelector((state: RootState) => state.items);
+
+    const { tags } = useSelector((state: RootState) => state.appTags);
     const [tagCloudData, setTagCloudData] = useState<CloudTag[]>([]);
     const navigate = useNavigate();
     useEffect(() => {

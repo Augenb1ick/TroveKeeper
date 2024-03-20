@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { DataGrid, GridColDef, GridRowId, ruRU } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
@@ -13,13 +12,14 @@ import { Typography } from '@mui/material';
 
 import { reformDataFromApi } from '../utills/dataReformer';
 import UsersTableProps from '../types/props/UsersTableProps';
-import { useUsers } from '../context/UsersContext';
 import {
     TABLE_INITIAL_PAGE,
     TABLE_PAGE_SIZE,
     TABLE_PAGE_SIZE_OPTIONS,
 } from '../utills/constants';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const UsersTable: React.FC<UsersTableProps> = ({
     handleDeleteUsers,
@@ -34,7 +34,7 @@ const UsersTable: React.FC<UsersTableProps> = ({
     });
     const currentLanguage = i18n.language;
 
-    const { users } = useUsers();
+    const { users } = useSelector((state: RootState) => state.appUsers);
 
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 

@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
@@ -15,19 +14,17 @@ import { EMAIL_PATTERN } from '../utills/constants';
 import { reformFormData } from '../utills/formDataReformer';
 import { managingUsersApi } from '../utills/api/usersApi';
 import { useNavigate } from 'react-router-dom';
-import { useUsers } from '../context/UsersContext';
-import { useSnackBars } from '../context/SnackBarsContext';
-import Snackbar from '../Components/Snackbar';
-import { IconButton } from '@mui/material';
+import { IconButton, Snackbar } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import ChangeLanguageButtons from '../Components/ChangeLanguageButtons';
+import ChangeLanguageButtons from '../сomponents/ChangeLanguageButtons';
+import { useDispatch } from 'react-redux';
+import { setIsLoggedIn } from '../redux/slices/usersSlice';
+import { handleErrorSnackOpen } from '../redux/slices/snackBarsSlice';
 
 const SignIn: FC = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { t } = useTranslation('translation', { keyPrefix: 'auth' });
-
-    const { setIsLoggedIn } = useUsers();
-    const { handleErrorSnackOpen } = useSnackBars();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -44,12 +41,12 @@ const SignIn: FC = () => {
             .then((res) => {
                 if (res.token) {
                     localStorage.setItem('jwt', res.token);
-                    setIsLoggedIn(true);
+                    dispatch(setIsLoggedIn(true));
                     navigate('/', { replace: true });
                 }
             })
             .catch((err) => {
-                handleErrorSnackOpen(t(err) || t('signUpError'));
+                dispatch(handleErrorSnackOpen(t(err) || t('signUpError')));
             })
             .finally(() => setIsLoading(false));
     };

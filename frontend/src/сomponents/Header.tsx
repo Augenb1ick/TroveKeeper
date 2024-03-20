@@ -1,7 +1,5 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Container from '@mui/material/Container';
 import SearchInput from './SearchInput';
 import Logo from './Logo';
 import NavMenu from './NavMenu';
@@ -9,7 +7,7 @@ import AuthButtons from './AuthButtons';
 import { Box, IconButton } from '@mui/material';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 import ChangeLanguageButtons from './ChangeLanguageButtons';
 
 const Header = () => {

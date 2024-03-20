@@ -1,5 +1,4 @@
 import React from 'react';
-import { HEADER_MENU_ITEMS } from '../utills/constants';
 import {
     Box,
     Button,
@@ -9,10 +8,10 @@ import {
     Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useUsers } from '../context/UsersContext';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { inherits } from 'util';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
 const NavMenu = () => {
     const { t } = useTranslation('translation', { keyPrefix: 'header' });
@@ -22,8 +21,9 @@ const NavMenu = () => {
 
     const navigate = useNavigate();
 
-    const { currentUser } = useUsers();
-    const role = currentUser.role;
+    const role = useSelector(
+        (state: RootState) => state.appUsers.currentUser.role
+    );
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
