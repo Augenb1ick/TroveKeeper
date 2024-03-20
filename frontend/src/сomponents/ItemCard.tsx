@@ -6,12 +6,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { ItemDataType } from '../types/dataTypes/ItemDataType';
 import { itemsApi } from '../utills/api/itemsApi';
 import { CollectionDataType } from '../types/dataTypes/CollectionDataType';
-import { useCollections } from '../context/CollectionsContext';
 import AddPosterComponent from './AddPosterComponent';
-import { useUsers } from '../context/UsersContext';
-import { useSnackBars } from '../context/SnackBarsContext';
 
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { handleErrorSnackOpen } from '../redux/slices/snackBarsSlice';
 
 interface ItemCardInterface {
     itemId: string;
@@ -23,7 +23,9 @@ const ItemCard: FC<ItemCardInterface> = ({ itemId, handleChangePoster }) => {
         keyPrefix: 'itemCard',
     });
     const [itemData, setItemData] = useState<ItemDataType>();
-    const { currentUser, isLoggedIn } = useUsers();
+    const { currentUser, isLoggedIn } = useSelector(
+        (state: RootState) => state.appUsers
+    );
     const currentUserId = currentUser._id;
     const itemIsLikedByCurrentUser =
         itemData?.likes.includes(currentUserId) || false;
@@ -31,9 +33,11 @@ const ItemCard: FC<ItemCardInterface> = ({ itemId, handleChangePoster }) => {
     const [itemCollection, setItemCollection] = useState<CollectionDataType>(
         {} as CollectionDataType
     );
-    const { allCollections } = useCollections();
+    const { allCollections } = useSelector(
+        (state: RootState) => state.collections
+    );
 
-    const { handleErrorSnackOpen } = useSnackBars();
+    const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -50,7 +54,7 @@ const ItemCard: FC<ItemCardInterface> = ({ itemId, handleChangePoster }) => {
 
     const handleLikeClick = () => {
         if (!isLoggedIn) {
-            handleErrorSnackOpen(t('noAuthLike'));
+            dispatch(handleErrorSnackOpen(t('noAuthLike')));
             return;
         } else {
             itemsApi
@@ -61,7 +65,7 @@ const ItemCard: FC<ItemCardInterface> = ({ itemId, handleChangePoster }) => {
                     );
                     setItemIsLiked(isLiked);
                 })
-                .catch(() => handleErrorSnackOpen(t('likeError')));
+                .catch(() => dispatch(handleErrorSnackOpen(t('likeError'))));
         }
     };
 

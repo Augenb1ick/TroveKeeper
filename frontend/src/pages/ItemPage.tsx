@@ -1,34 +1,26 @@
-import {
-    Box,
-    Button,
-    Chip,
-    IconButton,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, Chip, IconButton, TextField, Typography } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 import { TagDataType } from '../types/dataTypes/TagDataType';
 import { itemsApi } from '../utills/api/itemsApi';
-import { useCollections } from '../context/CollectionsContext';
 import { CollectionDataType } from '../types/dataTypes/CollectionDataType';
-import { useTags } from '../context/TagsContext';
 import { useNavigate } from 'react-router-dom';
 import { fieldValueApi } from '../utills/api/fieldValueApi';
 import { fieldsApi } from '../utills/api/fieldsApi';
 import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import ItemCard from '../Components/ItemCard';
-import { useSnackBars } from '../context/SnackBarsContext';
 import {
     API_URL,
     UPDATING_ITEM_POSTER_ERROR_MESSAGE,
 } from '../utills/constants';
 import { useTranslation } from 'react-i18next';
 import { io } from 'socket.io-client';
-import { useUsers } from '../context/UsersContext';
-import Comment from '../Components/Comment';
 import { formatDate } from '../utills/formatDate';
 import SendIcon from '@mui/icons-material/Send';
+import ItemCard from '../сomponents/ItemCard';
+import Comment from '../сomponents/Comment';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { handleErrorSnackOpen } from '../redux/slices/snackBarsSlice';
 
 interface CommentDataType {
     _id: string;
@@ -47,11 +39,15 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
     const { t } = useTranslation('translation', {
         keyPrefix: 'itemPage',
     });
-    const { allCollections } = useCollections();
-    const { tags } = useTags();
-    const { currentUser, isLoggedIn } = useUsers();
-    const { handleErrorSnackOpen } = useSnackBars();
+    const { allCollections } = useSelector(
+        (state: RootState) => state.collections
+    );
+    const { tags } = useSelector((state: RootState) => state.appTags);
+    const { currentUser, isLoggedIn } = useSelector(
+        (state: RootState) => state.appUsers
+    );
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [itemTags] = useState<TagDataType[]>(
         tags.filter((tag) => tag.items.includes(itemId))
@@ -69,7 +65,9 @@ const ItemPage: FC<ItemPageProps> = ({ itemId }) => {
         itemsApi
             .changeItemPoster(poster, itemId)
             .catch(() =>
-                handleErrorSnackOpen(UPDATING_ITEM_POSTER_ERROR_MESSAGE)
+                dispatch(
+                    handleErrorSnackOpen(UPDATING_ITEM_POSTER_ERROR_MESSAGE)
+                )
             );
     };
 

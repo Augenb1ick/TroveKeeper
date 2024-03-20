@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import UsersTable from '../Components/UsersTable';
+import UsersTable from '../сomponents/UsersTable';
 import { managingUsersApi } from '../utills/api/usersApi';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -7,20 +7,26 @@ import {
     MANAGING_USERS_ERROR_MESSAGE,
     SELF_BAN_MESSAGE,
 } from '../utills/constants';
-import { useUsers } from '../context/UsersContext';
-import { useSnackBars } from '../context/SnackBarsContext';
 import { UserDataType } from '../types/dataTypes/userData';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import {
+    setCurrentUser,
+    setIsLoggedIn,
+    setUsers,
+} from '../redux/slices/usersSlice';
+import { handleErrorSnackOpen } from '../redux/slices/snackBarsSlice';
 
 const AdminPanel = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const { setUsers, setIsLoggedIn, currentUser, setCurrentUser } = useUsers();
-    const { handleErrorSnackOpen } = useSnackBars();
+    const { currentUser } = useSelector((state: RootState) => state.appUsers);
 
     const handleLogOut = () => {
-        setIsLoggedIn(false);
-        setCurrentUser({} as UserDataType);
+        dispatch(setIsLoggedIn(false));
+        dispatch(setCurrentUser({} as UserDataType));
         localStorage.clear();
         navigate('/', { replace: true });
     };
@@ -42,14 +48,14 @@ const AdminPanel = () => {
                 postActionCallback && postActionCallback();
                 managingUsersApi
                     .getUsersInfo()
-                    .then((users) => setUsers(users))
+                    .then((users) => dispatch(setUsers(users)))
                     .catch((err) => {
-                        handleErrorSnackOpen(SELF_BAN_MESSAGE);
+                        dispatch(handleErrorSnackOpen(SELF_BAN_MESSAGE));
                         logOutIfNoAuth(err);
                     });
             })
             .catch((err) => {
-                handleErrorSnackOpen(MANAGING_USERS_ERROR_MESSAGE);
+                dispatch(handleErrorSnackOpen(MANAGING_USERS_ERROR_MESSAGE));
                 logOutIfNoAuth(err);
             })
             .finally(() => setIsLoading(false));
@@ -90,7 +96,7 @@ const AdminPanel = () => {
     const fetchUsersInfo = () => {
         managingUsersApi
             .getUsersInfo()
-            .then((users) => setUsers(users))
+            .then((users) => dispatch(setUsers(users)))
             .catch((err) => console.error(err));
     };
 
